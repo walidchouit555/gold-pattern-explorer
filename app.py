@@ -155,15 +155,14 @@ if "history_data" in st.session_state:
                         continue
 
                     # Do not compare windows with missing hourly bars.
+                                        # Check timestamp order and duplicates.
                     times = candidate["timestamp"]
 
-                    times = candidate["timestamp"]
+                    if not times.is_monotonic_increasing:
+                        continue
 
-if not times.is_monotonic_increasing:
-    continue
-
-if times.duplicated().any():
-    continue
+                    if times.duplicated().any():
+                        continue
 
                     candidate_close = candidate["close"].to_numpy(
                         dtype=float
