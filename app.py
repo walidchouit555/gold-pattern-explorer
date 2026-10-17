@@ -157,10 +157,13 @@ if "history_data" in st.session_state:
                     # Do not compare windows with missing hourly bars.
                     times = candidate["timestamp"]
 
-                    gaps = times.diff().dropna()
+                    times = candidate["timestamp"]
 
-                    if not gaps.eq(pd.Timedelta(hours=1)).all():
-                        continue
+if not times.is_monotonic_increasing:
+    continue
+
+if times.duplicated().any():
+    continue
 
                     candidate_close = candidate["close"].to_numpy(
                         dtype=float
